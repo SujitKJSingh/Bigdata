@@ -1,0 +1,47 @@
+
+                                         Most Useful Hbase commands
+                                               Environment: Cloudera Quickstart VMWare
+Open the terminal and start below services 
+$sudo service hbase-master start
+$sudo service hbase-regionserver start
+Check Hbase Services running or not:
+$sudo –u hbase jps
+Enter into Hbase shell:
+$ hbase shell
+List : it will display list of tables
+Hbase>list     
+Create Table:
+Hbase>create  ‘emp’,’Name’,’Dept’
+Here emp is name of table , Name & Dept are the column family.
+List the table:
+Hbase>list  ‘emp’
+Insert data into emp:
+Hbase>put ‘emp’,’1’,’Name:FN’,’Sujit’
+Here FN is column qualifier of column family Name and we inserted ‘Sujit’ in this as a value.
+In the same way we can insert values and add column qualifier as many as we want on the go.
+Hbase>put ‘emp’,’1’,’Name:LN’,’Singh’
+Hbase>put ‘emp’,’1’,’Dept’,’IT’
+So we have inserted 1 complete row of two columns of emp table.
+
+SCAN: it is used to display record of a table
+Hbase>scan ‘emp’     //entire table will be displayed
+Hbase>scan ‘emp’,{RAW=>true,VERSIONS=>1000}
+Hbase>describe ‘emp’    // it will display column family, associated filers, versions & more details.
+Hbase>disable ‘emp’      // it will disable emp , this command is used before deleting a table
+DROP:
+Hbase>drop ‘emp’         // drop the table
+Hbase>drop_all  “regx”     // drop all the table having regular expression mentioned 
+Hbase>enable ‘emp’   // it will start enabling emp if it is not dropped.
+Hbase>show filters    //display all the filters in habse
+ALTER :
+Hbase>alter ‘emp’, NAME=’address’, version=>5      // we have added new column address that can have 5 versions of it.
+Hbase>alter ‘emp’,{NAME=>’sal’,IN_MEMORY=>true}
+Hbase>alter ‘emp’,’delete’=>’sal’   
+
+Hbase>count ‘emp’, CACHE=>1000    // fetches 1000 rows at a time.
+GET : it will get a row or a cell contents present in the table.
+Hbase>get ‘emp’,1,’Name:FN’      // display FN of NAME from row 1
+Hbase>get ‘emp’, 1        // display row 1
+Hbase>get ‘emp’,’r1’,{COLUMN=>’dept’}     // display r1 row and column dept
+Hbase>get ‘emp’,’r1’,{COLUMN=>[‘Name’,’dept’,’address’]}
+Hbase>get ‘emp’,’r1’,[c1,c2]        //display row r1 of column c1 & c2
