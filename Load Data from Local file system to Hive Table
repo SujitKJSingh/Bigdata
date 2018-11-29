@@ -1,0 +1,31 @@
+In cloudera quickstart vmware -> Open the terminal 
+//Create text file named demo.txt
+$vi demo.txt
+press i for insert mode and write below record separated by |
+  Sujit|IT|90000
+  Santosh|IT|95000
+  Rahul|HR|80000
+  Atul|Sales|96000
+  Nilesh|Manager|100000
+  //to save this file press Esc :wq  it will save and ixit from vi editor
+  $pwd
+    home/cloudera
+  // Demo.txt file is ready now we can create a table in hive and load this file into hive table
+// Before creating table we have to llook at file format , delimiter 
+Luanch hive :
+$hive
+// Create Database 
+hive>CREATE DATABASE IF NOT EXISTS HR;
+// WE CAN SEE DATABASEBY BELOW COMMANDS 
+hive>dfs -ls /user/hive/warehouse     // this is the location where all the database will be available
+// create table inside HR database 
+hive>use HR
+hive> CREATE TABLE Employee(Name string,detp string,sal BIGINT)
+>ROW FORMAT DELIMITED FIELDS TERMINATED BY '|'
+>STORED AS TEXTFILE;
+// Table is created 
+// Now we can load data 
+hive> LOAD DATA LOCAL INPATH 'home/cloudera/demo.txt' INTO TABLE Employee;
+// We can see table & records with below mentioned commands
+hive>show tables;
+hive>select count(1) from Employee;
