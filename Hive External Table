@@ -1,0 +1,37 @@
+                      Hive External Table from mysql and file format is avro
+//  Now we are going to import same set of database from mysql but in avro file format and save all the directories as a retail_stage.db
+$sqoop import-all-tables  --connect jdbc:mysql:// quickstart.cloudera:3306/retail_db --username sujit --password sujit –as-avrodatafile  --warehouse-dir=/user/hive/warehouse/retail_stage.db
+//Let us check it 
+hive>dfs –ls /user/hive/warehouse/retail_stage.db;
+hive>dfs –ls /user/hive/warehouse/retail_stage.db/orders;
+//file format should be avro.
+//Check all the avsc file are present or not , for all six file there should be six avsc file .
+//These avsc file are schema of table in json format.
+//Create directory in hdfs to store *.avsc file
+$hadoop fs –mkdir /user/retail_stage
+$hadoop fs –put *.avsc  /user/retail_stage
+//Now  in HDFS all avro file formats and avsc file format  are available at 
+      /user /hive/warehouse/retail_stage.db
+  	  /user/retail_stage   
+//Respectively.
+//There are two ways to create external table on top of hdfs 
+// one is explicitely defining name of column ,its data type etc. schema of table we can get by 
+$cat /user/retail_stage/orders.avsc
+//CREATE EXTERNAL TABLE 
+hive>CREATE EXTERNAL TABLE orders(order_id INT,order_date date,order_customer_id int,order_status string)
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe'
+STORED AS AVRO
+LOCATION 'hdfs:///user/hive/warehouse/retail_stage.db/orders'
+
+Check it :
+hive>select * from retail_stage.orders limit 10;
+
+Second way to create external table is : 
+CREATE EXTERNAL TABLE customers
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe'
+STORED AS INPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat'
+LOCATION 'hdfs:///user/hive/warehouse/retail_stage.db/customers'
+TBLPROPERTIES ('avro.schema.url'='hdfs://quickstart.cloudera:8020/user/retail_stage/customers.avsc');
+
+
