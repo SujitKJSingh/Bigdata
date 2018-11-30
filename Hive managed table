@@ -1,0 +1,23 @@
+  //                      Import database tables from mysql to hive directory using sqoop :
+$sqoop import-all-tables  --connect jdbc:mysql:// quickstart.cloudera:3306/retail_db --username sujit --password sujit
+--as-textfile  --warehouse-dir=/root/hive/warehouse/retail_db.db
+//Here retail_db is mysql databse and i have created username & password as sujit
+//We have created directory in hive but we have not created database on top of this 
+//We can check retail_db into hadoop 
+$hadoop fs –ls /user/hive/warehouse
+$hadoop fs –ls /user/hive/warehouse.retail_db.db
+//this is the retail_db.db directory that is being created as a result of import from mysql through sqoop.
+//Create database and table on top of hdfs`s
+//Next we have to create database and then table – remember name of database, tables and
+//table fields its datatype all should match then only mapping will be done and we will be
+//able to access record from table via hive.
+hive>  create database retail_db;
+hive>use retail_db;
+hive>create table orders(order_id INT,order_date date,order_customer_id INT,order_status varchar(20))
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ‘,’ STORED AS TEXTFILE;
+//TABLE IS CREATED MAPPING OF THIS TABLE AND DATA INTO DIRECTORY OF /USER/HIVE/WAREHOUSE WILL TAKE PLACE.
+//Now we can access record from hive also .
+hive>select * from retail_db.orders limit 10;
+hive>describe formatted orders;    // this command will describe table as managed table 
+
+
