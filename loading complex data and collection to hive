@@ -1,0 +1,33 @@
+
+complexdata.txt
+*************************
+Sujit	Rahul,Santosh,Atul,Nilesh
+personal:7276759053,office:02046764474	mailid:sujit@gmail.com	221204,yes, 98989.0
+Rahul	Sujit,Santosh,Atul,Nilesh	personal:7276759053,office:02046764474	mailid: rahul@gmail.com	221205,yes,88989.0
+Santosh	Sujit,Rahul,Atul,Nilesh	personal:7276759053,office:03046764474	mailid:santoshl@gmail.com	223205,yes,89989.0
+
+
+CREATE TABLE BASED ON COMPLEX DATA STRUCTURE
+*******************
+create table complexdata(
+Name string,
+friends array<string>,
+phone map<string,bigint>,
+email string,
+others struct<pin:int,married:string,sal:double>)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t' 
+COLLECTION ITEMS TERMINATED BY ','
+MAP KEYS TERMINATED BY ':'
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE;
+
+LOAD DATA 
+*****************
+LOAD DATA LOCAL INPATH '/home/cloudera/complexdata.txt
+INTO TABLE complexdata;
+
+Query/retrieve data
+**********************
+select * from complexdata;
+select name,phone['personal'],others.sal from complexdata;
+
