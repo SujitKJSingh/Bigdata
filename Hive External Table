@@ -1,6 +1,6 @@
                       Hive External Table from mysql and file format is avro
 //  Now we are going to import same set of database from mysql but in avro file format and save all the directories as a retail_stage.db
-$sqoop import-all-tables  --connect jdbc:mysql:// quickstart.cloudera:3306/retail_db --username sujit --password sujit –as-avrodatafile  --warehouse-dir=/user/hive/warehouse/retail_stage.db
+$sqoop import-all-tables  --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --username sujit --password sujit --as-avrodatafile  --warehouse-dir=/user/hive/warehouse/retail_stage.db
 //Let us check it 
 hive>dfs –ls /user/hive/warehouse/retail_stage.db;
 hive>dfs –ls /user/hive/warehouse/retail_stage.db/orders;
